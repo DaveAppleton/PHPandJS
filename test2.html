@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>form test</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    </head>
+    <body>
+        <form id="registration">
+            <input id="email" type="text">
+            <input id="user_id" type="text">
+            <button type="submit">Register</button>
+        </form>
+        <script>
+            $(document).ready(function(){
+                $('#registration').submit(function(e){
+                    e.preventDefault();
+                    console.log("click")
+                    const formData = {
+                        email : $('#email').val().trim(),
+                        user_id : $('#user_id').val().trim()
+                    };
+                    console.log("form data ",formData)
+                 
+                    $.ajax({
+                        url : "/test2.php",
+                        type : 'POST',
+                        contentType : 'application/json',
+                        data: JSON.stringify(formData),
+                        success : function(responseStr) {
+                            console.log(responseStr)
+                            response = JSON.parse(responseStr)
+                            console.log(response.status)
+                            console.log(response["status"])
+                            if (response["status"] == "success") {
+                                alert("OK")
+                            } else {
+                                str = ""
+                                nl = ""
+                                
+                                for (j = 0; j < response.errors.length; j++){
+                                    console.log(response.errors[j])
+                                    str += nl + response.errors[j].message
+                                    nl = "\n"
+                                }
+                                alert(str)
+                            }
+                        },
+                        error: function(xhr,status,error) {
+                            console.log("An error occurred")
+                        }
+                    })
+                })
+            })
+        </script>
+    </body>
+</html>
