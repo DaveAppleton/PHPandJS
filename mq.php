@@ -23,7 +23,7 @@
             $stmt->execute([$data['category']]);
         } else {
             $stmt = $mysqli->prepare('select * from listing where categoryId = ? and listingDescription like ?');
-            $stmt->execute([$data['category'],"%"+$data['search']+"%"]);
+            $stmt->execute([$data['category'],"%".$data['search']."%"]);
         }
     } else {
         if ($data['search'] == "") {
@@ -31,7 +31,7 @@
             $stmt->execute();
         } else {
             $stmt = $mysqli->prepare('select * from listing where listingDescription like ?');
-            $stmt->execute(["%"+$data['search']+"%"]);
+            $stmt->execute(["%".$data['search']."%"]);
         }
     }
 

@@ -47,8 +47,11 @@
         <script>
             function load() {
                 val = document.getElementById("cat").value 
+                src = document.getElementById("search").value.trim()
+
                 formData = {
-                    "category" : val
+                    "category" : val,
+                    "search" : src
                 }
                 $.ajax({
                         url : "/mq.php",
@@ -134,6 +137,8 @@
                 <option value="None">None</option>
                
             </select>
+            <label for="search">Search</label>
+            <input class="form-styling" type="text" id="search" />
             <button onclick="load()">Load!</button>
         </div>
         <div class="card-container" id="container">
