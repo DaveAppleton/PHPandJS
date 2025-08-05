@@ -79,11 +79,12 @@
                 let newRow = document.createElement('tr');
                 newRow.appendChild(editCell('listingName',n))
                 newRow.appendChild(editTextCell('listingDescription',n))
-                newRow.appendChild(editCell('categoryId',n))
+                newRow.appendChild(editSmallCell('categoryId',n))
                 newRow.appendChild(editCell('listingBanner',n))
                 newRow.appendChild(editCell('listingTime',n))
-                newRow.appendChild(editCell('listingAvailibility',n))
-                newRow.appendChild(editCell('price',n))
+                newRow.appendChild(editSmallCell('listingAvailibility',n))
+                newRow.appendChild(editSmallCell('price',n))
+                newRow.appendChild(checkCell(n))
                 tableBody.appendChild(newRow)
             }
 
@@ -92,10 +93,21 @@
                 cell.innerHTML = `<input type="text" id="${key}_${id}"/>`
                 return cell
             }
+            function editSmallCell(key,id) {
+                const cell = document.createElement("td")
+                cell.innerHTML = `<input type="text" size="5" id="${key}_${id}"/>`
+                return cell
+            }
+            function checkCell(id) {
+                const cell = document.createElement("td")
+                cell.innerHTML = `<label for="new_${id}">add</label><input type="checkbox" size="5" id="new_${id}"/>`
+                return cell
+            }
+           
 
             function editTextCell(key,id) {
                 const cell = document.createElement("td")
-                cell.innerHTML = `<input type="textarea" rows=4 cols=20 id="${key}_${id}"></textarea>`
+                cell.innerHTML = `<textarea rows=4 cols=20 id="${key}_${id}"></textarea>`
                 return cell
             }
 
@@ -110,12 +122,20 @@
                 newRow.appendChild(newCell(line['listingTime']))
                 newRow.appendChild(newCell(line['listingAvailibility']))
                 newRow.appendChild(newCell(line['price']))
+                newRow.appendChild(deleteCell(line['listingId']))
                 tableBody.appendChild(newRow)
             }
 
             function keyCell(key,desc){
                 cell = document.createElement("td");
-                cell.innerHTML = `<a href="edit(${key})">${desc}</a>`;
+                //cell.innerHTML = `<a href="edit(${key})">${desc}</a>`;
+                cell.textContent = desc
+                return cell
+            }            
+            function deleteCell(key){
+                cell = document.createElement("td");
+                cell.innerHTML = `<label for="del_${key}">del</label><input type="checkbox" size="5" id="del_${key}"/>`
+                //cell.innerHTML = `<a href="delete(${key})">delete</a>`;
                 return cell
             }
 
@@ -144,6 +164,7 @@
 
             </tbody>
           </table>
+          <button onclick="javascript:update();">update</button>
 
     </body>
 </html>
