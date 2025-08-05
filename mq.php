@@ -18,11 +18,21 @@
     $data = json_decode(file_get_contents('php://input'),true);
 
     if ($data['category'] != "None") {
-        $stmt = $mysqli->prepare('select * from listing where categoryId = ?');
-        $stmt->execute([$data['category']]);
+        if ($data['search'] == "") {
+            $stmt = $mysqli->prepare('select * from listing where categoryId = ?');
+            $stmt->execute([$data['category']]);
+        } else {
+            $stmt = $mysqli->prepare('select * from listing where categoryId = ? and listingDescription like ?');
+            $stmt->execute([$data['category'],"%"+$data['search']+"%"]);
+        }
     } else {
-        $stmt = $mysqli->prepare('select * from listing');
-        $stmt->execute();
+        if ($data['search'] == "") {
+            $stmt = $mysqli->prepare('select * from listing');
+            $stmt->execute();
+        } else {
+            $stmt = $mysqli->prepare('select * from listing where listingDescription like ?');
+            $stmt->execute(["%"+$data['search']+"%"]);
+        }
     }
 
     $result = $stmt->get_result();
