@@ -60,6 +60,18 @@
                 tableBody.appendChild(newRow)
             }
 
+            function keyCell(key,desc){
+                cell = document.createElement("td");
+                cell.innerHTML = `<a href="edit(${key})">${desc}</a>`;
+                return cell
+            }
+
+            function newCell(content){
+                cell = document.createElement("td");
+                cell.textContent = desc;
+                return cell
+            }
+
     </script>
     <body onload="load();">
         <table id="t2co_table" class="interactive">
