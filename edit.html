@@ -78,7 +78,7 @@
                 const tableBody = table.getElementsByTagName('tbody')[0]; // If you have a tbody
                 let newRow = document.createElement('tr');
                 newRow.appendChild(editCell('listingName',n))
-                newRow.appendChild(editCell('listingDescription',n))
+                newRow.appendChild(editTextCell('listingDescription',n))
                 newRow.appendChild(editCell('categoryId',n))
                 newRow.appendChild(editCell('listingBanner',n))
                 newRow.appendChild(editCell('listingTime',n))
@@ -90,6 +90,12 @@
             function editCell(key,id) {
                 const cell = document.createElement("td")
                 cell.innerHTML = `<input type="text" id="${key}_${id}"/>`
+                return cell
+            }
+
+            function editTextCell(key,id) {
+                const cell = document.createElement("td")
+                cell.innerHTML = `<input type="textarea" id="${key}_${id}"/>`
                 return cell
             }
 
