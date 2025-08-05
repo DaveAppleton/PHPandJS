@@ -54,6 +54,9 @@
                                         l
                                     )
                                 }
+                                addNewLine(1)
+                                addNewLine(2)
+                                addNewLine(3)
                             } else {
                                 
                                 alert("Whoops")
@@ -68,6 +71,26 @@
                     c.removeChild(c.firstElementChild)
                 } 
 
+            }
+
+            function addNewLine(n) {
+                const table = document.getElementById('t2co_table');
+                const tableBody = table.getElementsByTagName('tbody')[0]; // If you have a tbody
+                let newRow = document.createElement('tr');
+                newRow.appendChild(editCell('listingName',n))
+                newRow.appendChild(editCell('listingDescription',n))
+                newRow.appendChild(editCell('categoryId',n))
+                newRow.appendChild(editCell('listingBanner',n))
+                newRow.appendChild(editCell('listingTime',n))
+                newRow.appendChild(editCell('listingAvailibility',n))
+                newRow.appendChild(editCell('price',n))
+                tableBody.appendChild(newRow)
+            }
+
+            function editCell(key,id) {
+                const cell = document.createElement("td")
+                cell.innerHTML = `<input type="text" id="${key}_${id}"/>`
+                return cell
             }
 
             function addAline(line) {
@@ -108,6 +131,7 @@
                 <th>Time</th>
                 <th>Availability</th>
                 <th>Price</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
