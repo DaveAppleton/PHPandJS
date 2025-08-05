@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Listing Editor</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    </head>
+    <script>
+            function load() {
+                val = "None" 
+                src = ""
+
+                formData = {
+                    "category" : val,
+                    "search" : src
+                }
+                $.ajax({
+                        url : "/mq.php",
+                        type : 'POST',
+                        contentType : 'application/json',
+                        data: JSON.stringify(formData),
+                        success : function(responseStr) {
+                            console.log(responseStr)
+                            response = JSON.parse(responseStr)
+                            console.log(response.status)
+                            console.log(response["status"])
+                            if (response["status"] == "success") {
+                                for (j = 0; j < response['data'].length; j++) {
+                                    l = response['data'][j]
+                                    addAline(
+                                        l
+                                    )
+                                }
+                            } else {
+                                
+                                alert("Whoops")
+                            }
+                        },
+                        error: function(xhr,status,error) {
+                            console.log("An error occurred")
+                        }
+                    })
+                let c = document.getElementById("container")
+                while (c.childElementCount > 0) {
+                    c.removeChild(c.firstElementChild)
+                } 
+
+            }
+
+            function addAline(line) {
+                const table = document.getElementById('t2co_table');
+                const tableBody = table.getElementsByTagName('tbody')[0]; // If you have a tbody
+                let newRow = document.createElement('tr');
+                newRow.appendChild(keyCell(line['listingId'],line['listingName']))
+                newRow.appendChild(newCell(line['listingDescription']))
+                newRow.appendChild(newCell(line['categoryId']))
+                newRow.appendChild(newCell(line['listingBanner']))
+                newRow.appendChild(newCell(line['listingTime']))
+                newRow.appendChild(newCell(line['listingAvailability']))
+                newRow.appendChild(newCell(line['price']))
+                tableBody.appendChild(newRow)
+            }
+
+    </script>
+    <body>
+        <table id="t2co_table" class="interactive">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>TokenId</th>
+                <th>Category Id</th>
+                <th>Banner</th>
+                <th>Time</th>
+                <th>Availability</th>
+                <th>Price</th>
+              </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+          </table>
+
+    </body>
+</html>
