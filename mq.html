@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+        <style>
+            .card-container {
+                display: flex; /* Use flexbox for layout */
+                flex-wrap: wrap; /* Allow cards to wrap to the next line */
+                justify-content: center; /* Center cards horizontally */
+                gap: 20px; /* Space between cards */
+                padding: 20px;
+            }
+
+            .card {
+                background-color: #fff;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                padding: 20px;
+                width: 300px; /* Default width for cards */
+                text-align: center;
+            }
+
+            .card h3 {
+                margin-bottom: 10px;
+                color: #333;
+            }
+
+            .card p {
+                color: #666;
+            }
+
+            /* For screens smaller than 768px (e.g., tablets) */
+            @media screen and (max-width: 768px) {
+            .card {
+                width: calc(50% - 20px); /* Two cards per row with gap */
+            }
+            }
+
+            /* For screens smaller than 480px (e.g., mobile phones) */
+            @media screen and (max-width: 480px) {
+            .card {
+                width: 100%; /* One card per row */
+            }
+            }
+        </style>
+        <script>
+            function addmore(){
+                
+                let c = document.getElementById("container")
+                let count = c.childElementCount + 1
+                let dc = document.createElement("div")
+                dc.classList.add("card")
+                let hd = document.createElement("h3")
+                let p = document.createElement("p")
+                hd.innerHTML = `Card Title ${count}`;
+                p.innerHTML = `this is the content of card ${count}`;
+                dc.appendChild(hd)
+                dc.appendChild(p)
+                c.appendChild(dc)
+            }
+        </script>
+    </head>
+    <body>
+        <div class="card-container" id="container">
+            <div class="card">
+              <h3>Card Title 1</h3>
+              <p>This is the content of card 1.</p>
+            </div>
+            <div class="card">
+              <h3>Card Title 2</h3>
+              <p>This is the content of card 2.</p>
+            </div>
+            <div class="card">
+              <h3>Card Title 3</h3>
+              <p>This is the content of card 3.</p>
+            </div>
+        </div>
+        <div>
+            <button onclick="addmore()">Add More!</button>
+        </div>
+    </body>
+</html>
+
+
+
