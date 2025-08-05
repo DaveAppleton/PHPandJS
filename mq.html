@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
     <head>
-
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <title>dynaload</title>
         <style>
             .card-container {
                 display: flex; /* Use flexbox for layout */
@@ -44,6 +45,59 @@
             }
         </style>
         <script>
+            function load() {
+                val = document.getElementById("cat").value 
+                formData = {
+                    "category" : val
+                }
+                $.ajax({
+                        url : "/mq.php",
+                        type : 'POST',
+                        contentType : 'application/json',
+                        data: JSON.stringify(formData),
+                        success : function(responseStr) {
+                            console.log(responseStr)
+                            response = JSON.parse(responseStr)
+                            console.log(response.status)
+                            console.log(response["status"])
+                            if (response["status"] == "success") {
+                                for (j = 0; j < response['data'].length; j++) {
+                                    l = response['data'][j]
+                                    loadCard(
+                                        l['listingName'],
+                                        l['listingTime']
+                                    )
+                                }
+                            } else {
+                                
+                                alert("Whoops")
+                            }
+                        },
+                        error: function(xhr,status,error) {
+                            console.log("An error occurred")
+                        }
+                    })
+                let c = document.getElementById("container")
+                while (c.childElementCount > 0) {
+                    c.removeChild(c.firstElementChild)
+                } 
+
+            }
+
+            function loadCard(title,sub) {
+                let c = document.getElementById("container")
+                let count = c.childElementCount + 1
+                let dc = document.createElement("div")
+                dc.classList.add("card")
+                let hd = document.createElement("h3")
+                let p = document.createElement("p")
+                hd.innerHTML = title;
+                p.innerHTML = sub;
+                dc.appendChild(hd)
+                dc.appendChild(p)
+                c.appendChild(dc)
+            }
+
             function addmore(){
                 
                 let c = document.getElementById("container")
@@ -58,9 +112,30 @@
                 dc.appendChild(p)
                 c.appendChild(dc)
             }
+
+            function init() {
+                console.log("init dropdown (should be from DB)")
+                c = document.getElementById("cat")
+                for (j = 1; j < 10; j++) {
+                    opt = document.createElement("option")
+                    opt.value = j
+                    opt.innerHTML = `Category ${j}`
+                    c.appendChild(opt)
+                }
+            }
         </script>
     </head>
-    <body>
+    <body onload="init()">
+        <label for="cat">Choose a category:</label>
+
+       
+        <div> 
+            <select name="cat" id="cat">
+                <option value="None">None</option>
+               
+            </select>
+            <button onclick="load()">Load!</button>
+        </div>
         <div class="card-container" id="container">
             <div class="card">
               <h3>Card Title 1</h3>
