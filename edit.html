@@ -79,7 +79,7 @@
                 newRow.appendChild(newCell(line['categoryId']))
                 newRow.appendChild(newCell(line['listingBanner']))
                 newRow.appendChild(newCell(line['listingTime']))
-                newRow.appendChild(newCell(line['listingAvailability']))
+                newRow.appendChild(newCell(line['listingAvailibility']))
                 newRow.appendChild(newCell(line['price']))
                 tableBody.appendChild(newRow)
             }
@@ -92,7 +92,7 @@
 
             function newCell(content){
                 cell = document.createElement("td");
-                cell.textContent = desc;
+                cell.textContent = content;
                 return cell
             }
 
@@ -103,7 +103,6 @@
               <tr>
                 <th>Name</th>
                 <th>Description</th>
-                <th>TokenId</th>
                 <th>Category Id</th>
                 <th>Banner</th>
                 <th>Time</th>
