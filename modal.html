@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Booking</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        /* Form styles */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .book-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        .book-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .error-message {
+            color: #d9534f;
+            margin-top: 5px;
+            font-size: 14px;
+            display: none;
+        }
+
+        /* Toast styles */
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1001;
+            right: 20px;
+            top: 20px;
+            font-size: 16px;
+        }
+
+        .toast.show {
+            visibility: visible;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+
+        @keyframes fadein {
+            from {top: 0; opacity: 0;}
+            to {top: 20px; opacity: 1;}
+        }
+
+        @keyframes fadeout {
+            from {top: 20px; opacity: 1;}
+            to {top: 0; opacity: 0;}
+        }
+    </style>
+</head>
+<body>
+
+<!-- Modal -->
+<div id="bookingModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h2 id="eventName">Event Name</h2>
+        <p id="eventTime">Event Time</p>
+        
+        <form id="bookingForm">
+            <input type="hidden" id="eventID">
+            
+            <div class="form-group">
+                <label for="quantity">Number of tickets:</label>
+                <input type="number" id="quantity" name="quantity" min="1" value="1" required>
+                <div id="quantityError" class="error-message"></div>
+            </div>
+            
+            <button type="submit" class="book-btn" id="bookBtn">Book Now</button>
+        </form>
+    </div>
+</div>
+
+<!-- Toast Notification -->
+<div id="toast" class="toast"></div>
+
+<script>
+    // Function to open the modal with event details
+    function openBookingModal(eventId, eventName, eventTime) {
+        document.getElementById('eventID').value = eventId;
+        document.getElementById('eventName').textContent = eventName;
+        document.getElementById('eventTime').textContent = eventTime;
+        document.getElementById('quantity').value = 1;
+        document.getElementById('quantityError').style.display = 'none';
+        document.getElementById('bookingModal').style.display = 'block';
+    }
+
+    // Function to show toast message
+    function showToast(message, isSuccess) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.style.backgroundColor = isSuccess ? '#4CAF50' : '#d9534f';
+        toast.className = 'toast show';
+        
+        setTimeout(() => {
+            toast.className = toast.className.replace('show', '');
+        }, 3000);
+    }
+
+    // Close modal when clicking the X button
+    document.querySelector('.close-btn').addEventListener('click', function() {
+        document.getElementById('bookingModal').style.display = 'none';
+    });
+
+    // Close modal when clicking outside of it
+    window.addEventListener('click', function(event) {
+        if (event.target === document.getElementById('bookingModal')) {
+            document.getElementById('bookingModal').style.display = 'none';
+        }
+    });
+
+    // Form submission handler
+    document.getElementById('bookingForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const bookBtn = document.getElementById('bookBtn');
+        const eventId = document.getElementById('eventID').value;
+        const quantity = document.getElementById('quantity').value;
+        const errorElement = document.getElementById('quantityError');
+        
+        // Disable the button
+        bookBtn.disabled = true;
+        errorElement.style.display = 'none';
+        
+        // Prepare the data to send
+        const data = {
+            eventID: eventId,
+            quantity: quantity
+        };
+        
+        // Example POST request (replace with your actual endpoint)
+        fetch('https://your-api-endpoint.com/book', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Show success toast and close modal
+                showToast('Booking successful!', true);
+                setTimeout(() => {
+                    document.getElementById('bookingModal').style.display = 'none';
+                }, 1000);
+            } else {
+                // Show error message
+                errorElement.textContent = data.message || 'Booking failed. Please try again.';
+                errorElement.style.display = 'block';
+                bookBtn.disabled = false;
+            }
+        })
+        .catch(error => {
+            errorElement.textContent = 'An error occurred. Please try again.';
+            errorElement.style.display = 'block';
+            bookBtn.disabled = false;
+            console.error('Error:', error);
+        });
+    });
+
+    // Example of how to open the modal (you can call this from your event listing)
+    // openBookingModal('123', 'Summer Concert', 'July 15, 2023 at 8:00 PM');
+</script>
+    <button onclick='javascript:openBookingModal("123", "Summer Concert", "July 15, 2023 at 8:00 PM");'>Book Now!</button>
+</body>
+</html>
